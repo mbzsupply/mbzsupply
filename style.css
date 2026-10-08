@@ -1,0 +1,217 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --alt: #1a1a1a;
+  --accent: #d4af37;
+  --text: #ffffff;
+  --muted: #b0b0b0;
+  --btn: #d4af37;
+  --btn-hover: #f0c83c;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  background: rgba(0,0,0,0.9);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+.hero {
+  padding: 5rem 2rem;
+  text-align: center;
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+              url('https://via.placeholder.com/1600x600/222/ddd?text=MBZSUPPLY') center/cover no-repeat;
+}
+
+.hero h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 3px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--btn);
+  color: #000;
+  padding: 0.9rem 2.5rem;
+  font-weight: 900;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.3s;
+  letter-spacing: 1px;
+}
+
+.btn:hover {
+  background: var(--btn-hover);
+}
+
+.products {
+  padding: 4rem 2rem;
+}
+
+.alt-bg {
+  background: var(--alt);
+}
+
+.products h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+.card {
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+}
+
+.card img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  background: #222;
+}
+
+.card h3 {
+  padding: 1rem 1.2rem 0.2rem;
+  font-size: 1.15rem;
+}
+
+.price {
+  padding: 0 1.2rem 1rem;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.btn-buy {
+  display: block;
+  margin: 0 1.2rem 1.2rem;
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 0.7rem;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.btn-buy:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.contact-box {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-box p {
+  font-size: 1.1rem;
+  margin: 0.8rem 0;
+}
+
+.note {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+footer {
+  background: #000;
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid #222;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  header .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero h2 {
+    font-size: 2rem;
+  }
+  .nav-links {
+    justify-content: center;
+  }
+}
