@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBZSupply — Streetwear & UK Wear</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    :root {
+      --bg: #ffffff;
+      --card: #ffffff;
+      --border: #eaeaea;
+      --accent: #fffc00;
+      --text: #111111;
+      --muted: #777777;
+      --shadow: 0 2px 10px rgba(0,0,0,0.04);
+      --hover-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --danger: #ff4444;
+      --success: #00c851;
+    }
+    body { background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 4rem; }
+    header {
+      background: #111;
+      padding: 1.2rem 1rem; text-align: center;
+      border-bottom: 3px solid var(--accent); position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 1.6rem; font-weight: 900; color: var(--accent); letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+    nav { margin-top: 0.3rem; }
+    nav a {
+      color: #fff; margin: 0 0.5rem; text-decoration: none; font-weight: 600;
+      font-size: 0.9rem; transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+    .hero { padding: 2rem 1rem; text-align: center; background: #fafafa; border-bottom: 1px solid #eee; }
+    .hero h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1rem; color: var(--muted); max-width: 600px; margin: 0 auto; }
+    section { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1rem; }
+    section h2 {
+      font-size: 1.4rem; margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem; border-bottom: 2px solid #eee;
+      display: inline-block;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: var(--card); border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); border-color: #ddd; }
+    .card-img {
+      position: relative; width: 100%; padding-top: 56.25%;
+      background: #f8f8f8; overflow: hidden;
+    }
+    .card-img span {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      color: #bbb; font-size: 1rem; font-weight: 600; text-align: center;
+    }
+    .card-img img {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .card-body { padding: 1.2rem; }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; }
+    .price { font-size: 1.3rem; font-weight: 900; color: #111; margin-bottom: 0.8rem; }
+    .stock-status {
+      display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px;
+      font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem;
+    }
+    .out-of-stock { background: #ffebee; color: var(--danger); }
+    .in-stock { background: #e8f5e9; color: #2e7d32; }
+    .size-option {
+      display: inline-block; padding: 0.6rem 1rem; margin: 0.3rem;
+      border-radius: 8px; border: 2px solid #eee; cursor: pointer;
+      font-weight: 600; transition: all 0.2s;
+    }
+    .size-option.unavailable { background: #f5f5f5; color: #ccc; border-color: #eee; cursor: not-allowed; text-decoration: line-through; }
+    .size-option.available:hover { border-color: var(--accent); background: #fffde6; }
+    .size-option.selected { border-color: var(--accent); background: var(--accent); color: #000; }
+    .add-btn {
+      width: 100%; background: var(--accent); color: #000; border: none;
+      padding: 0.9rem; font-weight: 800; border-radius: 8px; cursor: pointer;
+      font-size: 1rem; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .add-btn:disabled { background: #ddd; cursor: not-allowed; transform: none; }
+    .add-btn:hover:not(:disabled) { transform: scale(1.03); box-shadow: 0 4px 12px rgba(255,252,0,0.3); }
+    .cart-section {
+      background: #fff; border-radius: 16px; padding: 1.5rem; margin-top: 2rem;
+      border: 1px solid #eee; box-shadow: var(--shadow);
+    }
+    .cart-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 0; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .remove-btn {
+      background: #ff4444; color: white; border: none; padding: 0.5rem 0.9rem;
+      border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.9rem;
+    }
+    .delivery-option {
+      background: #fafafa; border-radius: 10px; padding: 1rem; margin: 0.75rem 0;
+      border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .delivery-option.selected { border-color: var(--accent); background: #fffde6; }
+    .delivery-option input { margin-right: 0.75rem; width: auto; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    .cart-total { font-size: 1.4rem; font-weight: 800; margin-top: 1rem; text-align: right; }
+    .shipping-line { font-size: 1rem; color: var(--muted); text-align: right; margin-top: 0.5rem; }
+    .checkout-btn {
+      width: 100%; background: #111; color: #fff; border: none;
+      padding: 1rem; font-weight: 800; border-radius: 10px; cursor: pointer;
+      font-size: 1.1rem; margin-top: 1.5rem; transition: all 0.2s;
+    }
+    .checkout-btn:hover { background: #333; }
+    .empty-cart { color: var(--muted); text-align: center; padding: 2rem; }
+    .notification {
+      position: fixed; bottom: 2rem; right: 1rem; left: 1rem;
+      background: #111; color: #fff; padding: 1rem; border-radius: 10px;
+      font-weight: 700; text-align: center;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .notification.show { transform: translateY(0); opacity: 1; }
+    .success-box, .pending-box {
+      text-align: center; padding: 2rem; border-radius: 12px; margin: 1.5rem 0;
+    }
+    .success-box { background: #e8f5e9; border: 2px solid #a5d6a7; }
+    .pending-box { background: #fff8e1; border: 2px solid #ffd54f; }
+    .order-number { font-size: 1.5rem; font-weight: 900; margin: 1rem 0; letter-spacing: 2px; }
+    .hidden { display: none !important; }
+    @media (max-width: 480px) {
+      section { padding: 2rem 0.8rem; }
+      .grid { grid-template-columns: 1fr; gap: 1.2rem; }
+      .cart-section { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">⚡ MBZSUPPLY</div>
+    <nav>
+      <a href="#trainers">Trainers</a>
+      <a href="#tracksuits">Tracksuits</a>
+      <a href="#coats">Coats</a>
+      <a href="#cart">Checkout</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Fresh Drops. Fast Shipping.</h1>
+    <p>Trainers • Tracksuits • Coats — Collect in Northampton or UK Delivery</p>
+  </div>
+
+  <section id="trainers">
+    <h2>👟 Trainers</h2>
+    <div class="grid" id="products-container">
+      <div class="card" data-product-id="p6-triple-black" data-name="P6 Trainer — Triple Black" data-price="60">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="P6 Trainer Triple Black" /></div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Triple Black</h3>
+          <p class="price">£60</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="p6-bw-tick" data-name="P6 Trainer — Black & White Tick" data-price="60">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="P6 Trainer Black & White Tick" /></div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Black & White Tick</h3>
+          <p class="price">£60</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="p6-bb-tick" data-name="P6 Trainer — Black & Blue Tick" data-price="60">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="P6 Trainer Black & Blue Tick" /></div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Black & Blue Tick</h3>
+          <p class="price">£60</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="p6-winter-grey" data-name="P6 Trainer — Winterised Grey" data-price="60">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="P6 Trainer Winterised Grey" /></div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Winterised Grey</h3>
+          <p class="price">£60</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="udd-black" data-name="UDD Tadmans — Black" data-price="55">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="UDD Tadmans Black" /></div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Black</h3>
+          <p class="price">£55</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+
+      <div class="card" data-product-id="udd-grey" data-name="UDD Tadmans — Grey" data-price="55">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="UDD Tadmans Grey" /></div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Grey</h3>
+          <p class="price">£55</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="7" data-available="false">UK 7</span>
+            <span class="size-option unavailable" data-size="8" data-available="false">UK 8</span>
+            <span class="size-option unavailable" data-size="9" data-available="false">UK 9</span>
+            <span class="size-option unavailable" data-size="10" data-available="false">UK 10</span>
+            <span class="size-option unavailable" data-size="11" data-available="false">UK 11</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tracksuits">
+    <h2>🧥 Tracksuits</h2>
+    <div class="grid">
+      <div class="card" data-product-id="rl-black" data-name="Ralph Lauten — Black" data-price="75">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="Ralph Lauten Black" /></div>
+        <div class="card-body">
+          <h3 class="card-title">Ralph Lauten — Black</h3>
+          <p class="price">£75</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="S" data-available="false">S</span>
+            <span class="size-option unavailable" data-size="M" data-available="false">M</span>
+            <span class="size-option unavailable" data-size="L" data-available="false">L</span>
+            <span class="size-option unavailable" data-size="XL" data-available="false">XL</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+      <div class="card" data-product-id="rl-navy" data-name="Ralph Lauten — Navy" data-price="75">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="Ralph Lauten Navy" /></div>
+        <div class="card-body">
+          <h3 class="card-title">Ralph Lauten — Navy</h3>
+          <p class="price">£75</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="S" data-available="false">S</span>
+            <span class="size-option unavailable" data-size="M" data-available="false">M</span>
+            <span class="size-option unavailable" data-size="L" data-available="false">L</span>
+            <span class="size-option unavailable" data-size="XL" data-available="false">XL</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="coats">
+    <h2>🧥 Coats</h2>
+    <div class="grid">
+      <div class="card" data-product-id="cg-black-badge" data-name="CG Windham — Black / Black Badge" data-price="125">
+        <div class="card-img"><span>📸 Photo Soon</span><img src="" alt="CG Windham Black/Black Badge" /></div>
+        <div class="card-body">
+          <h3 class="card-title">CG Windham — Black / Black Badge</h3>
+          <p class="price">£125</p>
+          <div class="stock-status out-of-stock">⚠️ Currently Unavailable</div>
+          <div class="size-selector">
+            <span class="size-option unavailable" data-size="S" data-available="false">S</span>
+            <span class="size-option unavailable" data-size="M" data-available="false">M</span>
+            <span class="size-option unavailable" data-size="L" data-available="false">L</span>
+            <span class="size-option unavailable" data-size="XL" data-available="false">XL</span>
+          </div>
+          <button class="add-btn" disabled>Out of Stock</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cart">
+    <div class="cart-section">
+      <h2>🛒 Checkout</h2>
+      
+      <div id="cart-items"></div>
+      <div id="empty-msg" class="empty-cart">Your basket is empty — add items above.</div>
+      
+      <div id="delivery-section" class="hidden">
+        <h3 style="margin: 2rem 0 1rem;">🚚 Delivery Option</h3>
+        <label class="delivery-option" data-type="collection">
+          <input type="radio" name="delivery" value="collection" />
+          <strong>📍 Collection — Northampton</strong><br>
+          Free — I will confirm availability via email within 24 hours
+        </label>
+        <label class="delivery-option" data-type="shipping">
+          <input type="radio" name="delivery" value="shipping" />
+          <strong>🚚 UK Shipping</strong><br>
+          £5.00 — Shipped via Royal Mail once confirmed
+        </label>
+      </div>
+      
+      <div id="customer-details" class="hidden">
+        <h3 style="margin: 2rem 0 1rem;">📋 Your Details</h3>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="cust-name" placeholder="Your full name" required />
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="cust-email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="cust-phone" placeholder="Your contact number" />
+        </div>
+        <div class="form-group">
+          <label>House Number & Street *</label>
+          <input type="text" id="cust-address1" placeholder="e.g. 12 Main Street" required />
+        </div>
+        <div class="form-group">
+          <label>Town / City *</label>
+          <input type="text" id="cust-city" placeholder="e.g. Northampton" required />
+        </div>
+        <div class="form-group">
+          <label>Postcode *</label>
+          <input type="text" id="cust-postcode" placeholder="e.g. NN1 1AB" required />
+        </div>
+        <div class="form-group">
+          <label>County (Optional)</label>
+          <input type="text" id="cust-county" placeholder="e.g. Northamptonshire" />
+        </div>
+      </div>
+      
+      <div id="totals-area" class="hidden">
+        <div id="shipping-line" class="shipping-line">Shipping: —</div>
+        <div id="cart-total" class="cart-total">Total: £0</div>
+      </div>
+      
+      <button id="place-order-btn" class="checkout-btn hidden">✅ Place Order</button>
+      
+      <div id="success-message" class="hidden">
+        <div class="success-box">
+          <h2>✅ Order Confirmed</h2>
+          <p>Thank you for your order!</p>
+          <div class="order-number" id="order-number-display"></div>
+          <p>A confirmation email has been sent to <strong id="cust-email-display"></strong></p>
+          <p style="margin-top:1rem; font-size:0.95rem; color:#555;">We will process your order shortly.<br>Thank you for shopping with MBZSupply ⚡</p>
+        </div>
+      </div>
+      
+      <div id="pending-message" class="hidden">
+        <div class="pending-box">
+          <h2>⏳ Order Received — Pending Confirmation</h2>
+          <div class="order-number" id="pending-order-number"></div>
+          <p>Your order has been sent to us and is waiting for confirmation.</p>
+          <p style="margin:1rem 0;">We will email you within <strong>24 hours</strong> to confirm availability and payment details.</p>
+          <p style="font-size:0.9rem; color:#666;">No payment has been taken yet — we will send you full details once confirmed ✅</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="notification" class="notification">Added to basket ✅</div>
+
+  <script>
+    // ==================== CONFIG ====================
+    const SHIPPING_COST = 5;
+    const YOUR_EMAIL = "mbzsupply@outlook.com";
+    let ORDER_COUNTER = 1000;
+    // =================================================
+
+    let cart = [];
+    let deliveryType = null;
+    let selectedSize = {};
+
+    const cartItemsEl = document.getElementById('cart-items');
+    const emptyMsgEl = document.getElementById('empty-msg');
+    const deliverySectionEl = document.getElementById('delivery-section');
+    const customerDetailsEl = document.getElementById('customer-details');
+    const totalsAreaEl = document.getElementById('totals-area');
+    const shippingLineEl = document.getElementById('shipping-line');
+    const totalEl = document.getElementById('cart-total');
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    const successMessageEl = document.getElementById('success-message');
+    const pendingMessageEl = document.getElementById('pending-message');
+    const notificationEl = document.getElementById('notification');
+
+    function generateOrderNumber() {
+      ORDER_COUNTER++;
+      return `MBZ-${new Date().getFullYear()}-${ORDER_COUNTER}`;
+    }
+
+    function showNotification(msg) {
+      notificationEl.textContent = msg;
+      notificationEl.classList.add('show');
+      setTimeout(() => notificationEl.classList.remove('show'), 2500);
+    }
+
+    function subtotal() {
+      return cart.reduce((sum, item) => sum + item.price, 0);
+    }
+
+    function shippingCost() {
+      return deliveryType === 'shipping' ? SHIPPING_COST : 0;
+    }
+
+    function grandTotal() {
+      return subtotal() + shippingCost();
+    }
+
+    function getRoyalMailLink(details) {
+      const address = [
+        details.address1,
+        details.city,
+        details.county,
+        details.postcode
+      ].filter(Boolean).join(', ');
+      return `https://www.royalmail.com/print-label?to_name=${encodeURIComponent(details.name)}&to_address=${encodeURIComponent(address)}&to_postcode=${encodeURIComponent(details.postcode)}&weight=1&format=parcel`;
+    }
+
+    function buildEmailBody(orderNumber, items, delivery, details, total) {
+      let itemsList = items.map(i => `• ${i.name} — Size ${i.size} — £${i.price}`).join('%0A');
+      const royalMailLink = delivery === 'shipping' 
+        ? `%0A🚚 Royal Mail Label: ${getRoyalMailLink(details)}` 
+        : '%0A📍 Collection — No shipping label needed';
+      
+      return `🛒 NEW ORDER — ${orderNumber}
+==============================
+ITEMS:
+${itemsList}
+
+DELIVERY: ${delivery === 'collection' ? '📍 COLLECTION — Northampton' : '🚚 UK SHIPPING'}
+${delivery === 'shipping' ? `Shipping: £${SHIPPING_COST}.00` : 'Shipping: FREE'}
+TOTAL: £${total}.00
+
+CUSTOMER DETAILS:
+Name: ${details.name}
+Email: ${details.email}
+Phone: ${details.phone || 'Not provided'}
+Address: ${details.address1}, ${details.city}${details.county ? ', ' + details.county : ''}, ${details.postcode}
+
+${delivery === 'shipping' ? `Royal Mail Link: ${getRoyalMailLink(details)}` : 'Status: PENDING COLLECTION CONFIRMATION'}
+==============================
+Sent via MBZSupply Website`;
+    }
+
+    function updateCartDisplay() {
+      cartItemsEl.innerHTML = '';
+      if (cart.length === 0) {
+        emptyMsgEl.style.display = 'block';
+        deliverySectionEl.classList.add('hidden');
+        customerDetailsEl.classList.add('hidden');
+        totalsAreaEl.classList.add('hidden');
+        placeOrderBtn.classList.add('hidden');
+        successMessageEl.classList.add('hidden');
+        pendingMessageEl.classList.add('hidden');
+        return;
+      }
+      
+      emptyMsgEl.style.display = 'none';
+      deliverySectionEl.classList.remove('hidden');
+      
+      if (deliveryType) {
+        customerDetailsEl.classList.remove('hidden');
+        totalsAreaEl.classList.remove('hidden');
+        placeOrderBtn.classList.remove('hidden');
+      } else {
+        customerDetailsEl.classList.add('hidden');
+        totalsAreaEl.classList.add('hidden');
+        placeOrderBtn.classList.add('hidden');
+      }
+
+      cart.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div>
+            <strong>${item.name}</strong><br>
+            <small>Size: ${item.size}</small><br>
+            <strong>£${item.price}</strong>
+          </div>
+          <button class="remove-btn" data-index="${index}">✕</button>
+        `;
+        cartItemsEl.appendChild(div);
+      });
+
+      if (deliveryType) {
+        shippingLineEl.textContent = deliveryType === 'shipping' 
+          ? `Shipping: £${SHIPPING_COST}.00` 
+          : 'Shipping: Free (Collection)';
+        totalEl.textContent = `Total: £${grandTotal()}.00`;
+      }
+    }
+
+    document.querySelectorAll('.size-option:not(.unavailable)').forEach(option => {
+      option.addEventListener('click', () => {
+        const selector = option.parentElement;
+        const card = selector.closest('.card');
+        const productId = card.dataset.productId;
+        
+        selector.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        selectedSize[productId] = option.dataset.size;
+        
+        const addBtn = card.querySelector('.add-btn');
+        addBtn.disabled = false;
+        addBtn.textContent = 'Add to Basket';
+      });
+    });
+
+    document.querySelectorAll('.delivery-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        deliveryType = opt.dataset.type;
+        opt.querySelector('input').checked = true;
+        updateCartDisplay();
+      });
+    });
+
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('add-btn') && !e.target.disabled) {
+        const btn = e.target;
+        const card = btn.closest('.card');
+        const productId = card.dataset.productId;
+        const size = selectedSize[productId];
+        
+        if (!size) {
+          showNotification('Select a size first');
+          return;
+        }
+        
+        cart.push({
+          productId: productId,
+          name: card.dataset.name,
+          size: size,
+          price: parseInt(card.dataset.price)
+        });
+        
+        showNotification('Added to basket ✅');
+        delete selectedSize[productId];
+        card.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
+        updateCartDisplay();
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      if (e.target.classList.contains('remove-btn')) {
+        cart.splice(parseInt(e.target.dataset.index), 1);
+        if (cart.length === 0) deliveryType = null;
+        updateCartDisplay();
+      }
+    });
+
+    placeOrderBtn.addEventListener('click', () => {
+      const name = document.getElementById('cust-name').value.trim();
+      const email = document.getElementById('cust-email').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address1 = document.getElementById('cust-address1').value.trim();
+      const city = document.getElementById('cust-city').value.trim();
+      const postcode = document.getElementById('cust-postcode').value.trim();
+      const county = document.getElementById('cust-county').value.trim();
+
+      if (!name || !email || !address1 || !city || !postcode) {
+        alert('Please fill in all required fields (*)');
+        return;
+      }
+
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      const orderNumber = generateOrderNumber();
+      const total = grandTotal();
+      const details = { name, email, phone, address1, city, postcode, county };
+      const emailBody = buildEmailBody(orderNumber, cart, deliveryType, details, total);
+
+      window.location.href = `mailto:${YOUR_EMAIL}?subject=NEW ORDER ${orderNumber} — ${deliveryType.toUpperCase()}&body=${encodeURIComponent(emailBody)}%0A%0A---%0ACustomer copy will be sent separately.`;
+
+      const customerSubject = deliveryType === 'collection' 
+        ? `Order ${orderNumber} — Pending Confirmation ✅` 
+        : `Order ${orderNumber} — Confirmed ✅`;
+      
+      let customerBody = '';
+      if (deliveryType === 'collection') {
+        customerBody = `Dear ${name},
+
+Thank you for your order with MBZSupply ⚡
+
+Order Number: ${orderNumber}
+Status: ⏳ Pending Confirmation
+
+We have received your collection request and will check availability within 24 hours.
+We will email you shortly to confirm and arrange payment & collection details.
+
+Your order:
+${cart.map(i => `• ${i.name} — Size ${i.size} — £${i.price}`).join('\n')}
+
+Subtotal: £${subtotal()}
+Shipping: FREE (Collection — Northampton)
+TOTAL: £${total}
+
+No payment has been taken yet. We will contact you to confirm.
+
+Best regards,
+MBZSupply Team
+`;
+      } else {
+        customerBody = `Dear ${name},
+
+Thank you for your order with MBZSupply ⚡
+
+Order Number: ${orderNumber}
+Status: ✅ Confirmed — Processing
+
+Your order has been received and will be dispatched once payment is confirmed.
+
+Your order:
+${cart.map(i => `• ${i.name} — Size ${i.size} — £${i.price}`).join('\n')}
+
+Subtotal: £${subtotal()}
+Shipping: £${SHIPPING_COST}
+TOTAL: £${total}
+
+Payment details and dispatch info will be sent separately.
+
+Best regards,
+MBZSupply Team
+`;
+      }
+
+      setTimeout(() => {
+        window.open(`mailto:${email}?subject=${encodeURIComponent(customerSubject)}&body=${encodeURIComponent(customerBody)}`, '_blank');
+      }, 500);
+
+      deliverySectionEl.classList.add('hidden');
+      customerDetailsEl.classList.add('hidden');
+      totalsAreaEl.classList.add('hidden');
+      placeOrderBtn.classList.add('hidden');
+      
+      if (deliveryType === 'collection') {
+        document.getElementById('pending-order-number').textContent = orderNumber;
+        pendingMessageEl.classList.remove('hidden');
+      } else {
+        document.getElementById('order-number-display').textContent = orderNumber;
+        document.getElementById('cust-email-display').textContent = email;
+        successMessageEl.classList.remove('hidden');
+      }
+
+      cart = [];
+      deliveryType = null;
+    });
+  </script>
+</body>
+</html>
