@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBZSupply — Streetwear & UK Wear</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    :root {
+      --bg: #0a0a0a; --card: #1a1a1a; --accent: #fffc00;
+      --text: #ffffff; --muted: #b0b0b0; --success: #34c759;
+    }
+    body { background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 4rem; }
+    header {
+      background: linear-gradient(135deg, #111 0%, #222 100%);
+      padding: 2rem 1.5rem; text-align: center;
+      border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 2rem; font-weight: 900; color: var(--accent); }
+    nav { margin-top: 1rem; }
+    nav a {
+      color: var(--text); margin: 0 0.75rem; text-decoration: none;
+      font-weight: 600; transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+    .hero { padding: 3rem 1.5rem; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin: 0 auto; }
+    section { max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem; }
+    section h2 {
+      font-size: 1.8rem; margin-bottom: 2rem;
+      border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 0.5rem;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: var(--card); border-radius: 12px; overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #2a2a2a;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,252,0,0.1); border-color: var(--accent); }
+    .card-img {
+      height: 200px; background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+      display: flex; align-items: center; justify-content: center; font-size: 3rem;
+    }
+    .card-body { padding: 1.25rem; }
+    .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .price { font-size: 1.3rem; font-weight: 900; color: var(--accent); margin-bottom: 1rem; }
+    .card select, .card input {
+      width: 100%; background: #2a2a2a; border: none; color: white;
+      padding: 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.95rem;
+    }
+    .add-btn {
+      width: 100%; background: var(--accent); color: #000; border: none;
+      padding: 0.85rem; font-weight: 800; border-radius: 6px; cursor: pointer;
+      font-size: 1rem; transition: transform 0.2s;
+    }
+    .add-btn:hover { transform: scale(1.03); }
+    .cart-section {
+      background: var(--card); border-radius: 12px; padding: 2rem;
+      margin-top: 2rem; border: 2px solid var(--accent);
+    }
+    .cart-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 0; border-bottom: 1px solid #333; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .remove-btn {
+      background: #ff4444; color: white; border: none; padding: 0.4rem 0.8rem;
+      border-radius: 4px; cursor: pointer; font-weight: 700;
+    }
+    .delivery-option {
+      background: #252525; border-radius: 8px; padding: 1rem; margin: 0.75rem 0;
+      border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .delivery-option.selected { border-color: var(--accent); background: #2d2d00; }
+    .delivery-option input { margin-right: 0.75rem; width: auto; }
+    .cart-total { font-size: 1.4rem; font-weight: 800; margin-top: 1rem; text-align: right; }
+    .shipping-line { font-size: 1rem; color: var(--muted); text-align: right; margin-top: 0.5rem; }
+    .payment-options { margin-top: 2rem; }
+    .payment-options h3 { margin-bottom: 1rem; font-size: 1.2rem; }
+    .apple-pay-btn {
+      width: 100%; background: #000; color: #fff; border: 1px solid #444;
+      padding: 1rem; border-radius: 8px; cursor: pointer; font-size: 1.1rem;
+      font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; transition: all 0.2s;
+    }
+    .apple-pay-btn:hover { background: #111; border-color: var(--accent); }
+    .snap-pay-btn {
+      width: 100%; background: #FFFC00; color: #000; border: none;
+      padding: 1rem; border-radius: 8px; cursor: pointer; font-size: 1rem;
+      font-weight: 800; margin-top: 0.5rem; transition: transform 0.2s;
+    }
+    .snap-pay-btn:hover { transform: scale(1.02); }
+    .empty-cart { color: var(--muted); text-align: center; padding: 2rem; }
+    .notification {
+      position: fixed; bottom: 2rem; right: 2rem; background: var(--success);
+      color: #fff; padding: 1rem 2rem; border-radius: 8px; font-weight: 700;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 1000;
+    }
+    .notification.show { transform: translateY(0); opacity: 1; }
+    .checkout-note {
+      margin-top: 1.5rem; padding: 1rem; background: #222; border-radius: 6px;
+      font-size: 0.9rem; color: #ccc;
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">⚡ MBZSUPPLY</div>
+    <nav>
+      <a href="#trainers">Trainers</a>
+      <a href="#tracksuits">Tracksuits</a>
+      <a href="#coats">Coats</a>
+      <a href="#cart">Basket</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Fresh Drops. Fast Shipping.</h1>
+    <p>Trainers • Tracksuits • Coats — Order & Pay Direct</p>
+  </div>
+
+  <section id="trainers">
+    <h2>👟 Trainers</h2>
+    <div class="grid">
+      <!-- P6 Triple Black -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Triple Black</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Triple Black</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="P6 Trainer" data-variant="Triple Black" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- P6 Black & White Tick -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Black & White Tick</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Black & White Tick</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="P6 Trainer" data-variant="Black & White Tick" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- P6 Black & Blue Tick -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Black & Blue Tick</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Black & Blue Tick</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="P6 Trainer" data-variant="Black & Blue Tick" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- P6 Winterised Grey -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Winterised Grey</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Winterised Grey</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="P6 Trainer" data-variant="Winterised Grey" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- P6 Grey & Black -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">P6 Trainer — Grey & Black</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Grey & Black</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="P6 Trainer" data-variant="Grey & Black" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- UDD Tadmans Black -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Black</h3>
+          <p class="price">£55</p>
+          <select class="colour"><option>Black</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="UDD Tadmans" data-variant="Black" data-price="55">Add to Basket</button>
+        </div>
+      </div>
+      <!-- UDD Tadmans Grey -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Grey</h3>
+          <p class="price">£55</p>
+          <select class="colour"><option>Grey</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="UDD Tadmans" data-variant="Grey" data-price="55">Add to Basket</button>
+        </div>
+      </div>
+      <!-- UDD Tadmans Brown -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Brown</h3>
+          <p class="price">£55</p>
+          <select class="colour"><option>Brown</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="UDD Tadmans" data-variant="Brown" data-price="55">Add to Basket</button>
+        </div>
+      </div>
+      <!-- UDD Tadmans Maroon -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">UDD Tadmans — Maroon</h3>
+          <p class="price">£55</p>
+          <select class="colour"><option>Maroon</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="UDD Tadmans" data-variant="Maroon" data-price="55">Add to Basket</button>
+        </div>
+      </div>
+      <!-- Askicks Kayano 14 White -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">Askicks Kayano 14 — White</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>White</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="Askicks Kayano 14" data-variant="White" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- Askicks Kayano 14 Black & Silver -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">Askicks Kayano 14 — Black & Silver</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Black & Silver</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="Askicks Kayano 14" data-variant="Black & Silver" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- Askicks Kayano 14 Blue/Grey & White -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">Askicks Kayano 14 — Blue/Grey & White</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Blue/Grey & White</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="Askicks Kayano 14" data-variant="Blue/Grey & White" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- Askicks Kayano 14 White & Pink -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">Askicks Kayano 14 — White & Pink</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>White & Pink</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="Askicks Kayano 14" data-variant="White & Pink" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+      <!-- Askicks Kayano 14 Grey -->
+      <div class="card">
+        <div class="card-img">👟</div>
+        <div class="card-body">
+          <h3 class="card-title">Askicks Kayano 14 — Grey</h3>
+          <p class="price">£60</p>
+          <select class="colour"><option>Grey</option></select>
+          <input type="text" class="size" placeholder="Size (UK)" required />
+          <button class="add-btn" data-name="Askicks Kayano 14" data-variant="Grey" data-price="60">Add to Basket</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tracksuits">
+    <h2>🧥 Tracksuits</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">Ralph Lauten — Black</h3>
+          <p class="price">£75</p>
+          <select class="colour"><option>Black</option></select>
+          <input type="text" class="size" placeholder="Size (S/M/L/XL)" required />
+          <button class="add-btn" data-name="Ralph Lauten Tracksuit" data-variant="Black" data-price="75">Add to Basket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">Ralph Lauten — Navy</h3>
+          <p class="price">£75</p>
+          <select class="colour"><option>Navy</option></select>
+          <input type="text" class="size" placeholder="Size (S/M/L/XL)" required />
+          <button class="add-btn" data-name="Ralph Lauten Tracksuit" data-variant="Navy" data-price="75">Add to Basket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">Ralph Lauten — Grey</h3>
+          <p class="price">£75</p>
+          <select class="colour"><option>Grey</option></select>
+          <input type="text" class="size" placeholder="Size (S/M/L/XL)" required />
+          <button class="add-btn" data-name="Ralph Lauten Tracksuit" data-variant="Grey" data-price="75">Add to Basket</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="coats">
+    <h2>🧥 Coats</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">CG Windham — Black / Black Badge</h3>
+          <p class="price">£125</p>
+          <select class="colour"><option>Black / Black Badge</option></select>
+          <input type="text" class="size" placeholder="Size" required />
+          <button class="add-btn" data-name="CG Windham Coat" data-variant="Black/Black Badge" data-price="125">Add to Basket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">CG Windham — Black / Red Badge</h3>
+          <p class="price">£125</p>
+          <select class="colour"><option>Black / Red Badge</option></select>
+          <input type="text" class="size" placeholder="Size" required />
+          <button class="add-btn" data-name="CG Windham Coat" data-variant="Black/Red Badge" data-price="125">Add to Basket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">CG Windham — Grey / Black Badge</h3>
+          <p class="price">£125</p>
+          <select class="colour"><option>Grey / Black Badge</option></select>
+          <input type="text" class="size" placeholder="Size" required />
+          <button class="add-btn" data-name="CG Windham Coat" data-variant="Grey/Black Badge" data-price="125">Add to Basket</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img">🧥</div>
+        <div class="card-body">
+          <h3 class="card-title">CG Windham — Grey / Red Badge</h3>
+          <p class="price">£125</p>
+          <select class="colour"><option>Grey / Red Badge</option></select>
+          <input type="text" class="size" placeholder="Size" required />
+          <button class="add-btn" data-name="CG Windham Coat" data-variant="Grey/Red Badge" data-price="125">Add to Basket</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cart">
+    <div class="cart-section">
+      <h2>🛒 Your Basket</h2>
+      <div id="cart-items"></div>
+      <div id="empty-msg" class="empty-cart">Your basket is empty — add items above.</div>
+      
+      <div id="delivery-section" class="hidden">
+        <h3 style="margin: 2rem 0 1rem;">🚚 Delivery Option</h3>
+        <label class="delivery-option selected" data-type="collection">
+          <input type="radio" name="delivery" value="collection" checked />
+          <strong>📍 Collection — Northampton</strong><br>
+          Free — Arrange via Snapchat
+        </label>
+        <label class="delivery-option" data-type="shipping">
+          <input type="radio" name="delivery" value="shipping" />
+          <strong>🚚 UK Shipping</strong><br>
+          £5.00 — Posted to your address
+        </label>
+      </div>
+      
+      <div id="totals-area" style="display:none;">
+        <div id="shipping-line" class="shipping-line">Shipping: —</div>
+        <div id="cart-total" class="cart-total">Total: £0</div>
+      </div>
+      
+      <div id="payment-area" class="payment-options hidden">
+        <h3>💳 Checkout & Pay</h3>
+        
+        <button class="apple-pay-btn" id="apple-pay-btn">
+          <span style="font-size:1.5rem;">🍎</span>
+          Pay with Apple Pay
+        </button>
+        
+        <p style="text-align:center; margin:1rem 0; color:#888;">Or — Send Order Direct</p>
+        
+        <button class="snap-pay-btn" id="snap-order-btn">
+          📲 Send Order to Snapchat
+        </button>
+        
+        <div class="checkout-note">
+          <strong>How it works:</strong><br>
+          • <strong>Collection (Northampton):</strong> Free — we'll arrange a time & place via Snapchat.<br>
+          • <strong>Shipping (£5):</strong> Enter your address in the order message — we'll confirm & post.<br>
+          • All orders confirmed within 24hrs ✅
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="notification" class="notification">Added to basket ✅</div>
+
+  <script>
+    const SHIPPING_COST = 5;
+    let cart = [];
+    let deliveryType = 'collection';
+
+    const cartItemsEl = document.getElementById('cart-items');
+    const emptyMsgEl = document.getElementById('empty-msg');
+    const deliverySectionEl = document.getElementById('delivery-section');
+    const totalsAreaEl = document.getElementById('totals-area');
+    const shippingLineEl = document.getElementById('shipping-line');
+    const totalEl = document.getElementById('cart-total');
+    const paymentAreaEl = document.getElementById('payment-area');
+    const notificationEl = document.getElementById('notification');
+
+    function showNotification(msg) {
+      notificationEl.textContent = msg;
+      notificationEl.classList.add('show');
+      setTimeout(() => notificationEl.classList.remove('show'), 2000);
+    }
+
+    function subtotal() {
+      return cart.reduce((sum, item) => sum + item.price, 0);
+    }
+
+    function shippingCost() {
+      return deliveryType === 'shipping' ? SHIPPING_COST : 0;
+    }
+
+    function grandTotal() {
+      return subtotal() + shippingCost();
+    }
+
+    function updateCartDisplay() {
+      cartItemsEl.innerHTML = '';
+      if (cart.length === 0) {
+        emptyMsgEl.style.display = 'block';
+        deliverySectionEl.classList.add('hidden');
+        totalsAreaEl.style.display = 'none';
+        paymentAreaEl.classList.add('hidden');
+        return;
+      }
+      
+      emptyMsgEl.style.display = 'none';
+      deliverySectionEl.classList.remove('hidden');
+      totalsAreaEl.style.display = 'block';
+      paymentAreaEl.classList.remove('hidden');
+
+      cart.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+          <div>
+            <strong>${item.name}</strong><br>
+            <small>${item.variant} — Size: ${item.size}</small><br>
+            <strong>£${item.price}</strong>
+          </div>
+          <button class="remove-btn" data-index="${index}">✕</button>
+        `;
+        cartItemsEl.appendChild(div);
+      });
+
+      // Update shipping & total lines
+      shippingLineEl.textContent = deliveryType === 'shipping' 
+        ? `Shipping: £${SHIPPING_COST}.00` 
+        : 'Shipping: Free (Collection)';
+      totalEl.textContent = `Total: £${grandTotal()}.00`;
+    }
+
+    // Delivery option selection
+    document.querySelectorAll('.delivery-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        deliveryType = opt.dataset.type;
+        opt.querySelector('input').checked = true;
+        updateCartDisplay();
+      });
+    });
+
+    // Add to basket
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('add-btn')) {
+        const btn = e.target;
+        const card = btn.closest('.card');
+        const size = card.querySelector('.size').value.trim();
+        if (!size) { alert('Please enter your size'); return; }
+        
+        cart.push({
+          name: btn.dataset.name,
+          variant: card.querySelector('.colour').value,
+          size: size,
+          price: parseInt(btn.dataset.price)
+        });
+        
+        showNotification('Added to basket ✅');
+        card.querySelector('.size').value = '';
+        updateCartDisplay();
+        
+        // Scroll to basket
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Remove item
+      if (e.target.classList.contains('remove-btn')) {
+        cart.splice(parseInt(e.target.dataset.index), 1);
+        updateCartDisplay();
+      }
+    });
+
+    // Build order message & send to Snapchat
+    document.getElementById('snap-order-btn').addEventListener('click', () => {
+      if (cart.length === 0) return;
+      
+      let msg = '🛒 NEW ORDER — MBZSupply\n\n';
+      msg += deliveryType === 'collection' 
+        ? '📍 Collection — Northampton\n' 
+        : `🚚 UK Shipping — £${SHIPPING_COST}\n`;
+      msg += '────────────────────\n';
+      
+      cart.forEach(item => {
+        msg += `• ${item.name}\n  ${item.variant}\n  Size: ${item.size}\n  £${item.price}\n`;
+      });
+      
+      msg += '────────────────────\n';
+      msg += `Subtotal: £${subtotal()}\n`;
+      msg += deliveryType === 'shipping' ? `Shipping: £${SHIPPING_COST}\n` : 'Shipping: Free\n';
+      msg += `TOTAL: £${grandTotal()}\n\n`;
+      msg += deliveryType === 'shipping' 
+        ? 'Please confirm address for delivery 👇' 
+        : 'Confirm collection time & place 👇';
+
+      // Encode and open Snapchat
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://snapchat.com/add/mbzsupply?text=${encoded}`, '_blank');
+    });
+
+    // Apple Pay handler
+    document.getElementById('apple-pay-btn').addEventListener('click', async () => {
+      if (cart.length === 0) return;
+      
+      if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+        alert('Apple Pay is not available on this device.\n\nUse the Snapchat button instead — your order will be sent straight to me.');
+        return;
+      }
+
+      try {
+        const total = grandTotal();
+        const paymentRequest = {
+          countryCode: 'GB',
+          currencyCode: 'GBP',
+          supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
+          merchantCapabilities: ['supports3DS'],
+          total: {
+            label: 'MBZSupply',
+            amount: total.toFixed(2)
+          },
+          lineItems: [
+            { label: 'Items', amount: subtotal().toFixed(2) },
+            { label: deliveryType === 'shipping' ? 'Shipping' : 'Collection', amount: shippingCost().toFixed(2) }
+          ]
+        };
+
+        const session = new ApplePaySession(6, paymentRequest);
+        
+        session.onvalidatemerchant = async (event) => {
+          alert('Apple Pay merchant validation needed — please use the Snapchat option for now.\n\nYour order will be sent directly to me and we can sort payment there.');
+          session.abort();
+        };
+
+        session.onpaymentauthorized = (event) => {
+          session.completePayment(ApplePaySession.STATUS_SUCCESS);
+          alert('✅ Payment successful!\n\nOrder confirmed — we will message you shortly via Snapchat.');
+          cart = [];
+          updateCartDisplay();
+        };
+
+        session.begin();
+      } catch (err) {
+        alert('Apple Pay setup in progress — use the Snapchat button below.\n\nOrder goes straight to me 👍');
+      }
+    });
+  </script>
+</body>
+</html>
