@@ -1,15 +1,37 @@
 # MBZSupply — Streetwear & UK Wear
+UK-based reseller: Trainers • Tracksuits • Coats
 
-Shoes • Tracksuits • Watches
+## 📬 Contact
+- Snapchat: **@mbzsupply**
+- Location: Northampton, UK
+- Shipping: UK
 
-## How to Edit
-- Open `index.html`
-- Replace `yourhandle` in the Instagram links with your actual username
-- Replace placeholder image links with your own product photos
-- Update prices & descriptions
-- Change email in the Contact section
+## 👟 Trainers
+| Product | Price | Colourways |
+|---|---|---|
+| P6 Trainers | £60 each | Triple Black, Black & White Tick, Black & Blue Tick, Winterised Grey, Grey & Black |
+| UDD Tadmans Trainers | £55 each | Black, Grey, Brown, Maroon |
+| Askicks Kayano 14 | £60 each | White, Black & Silver, Blue/Grey & White, White & Pink, Grey |
 
-## Publish
-Upload these 3 files to your GitHub repo → go to Settings → Pages → Source = main branch → Save
+## 🧥 Tracksuits
+| Product | Price | Colourways |
+|---|---|---|
+| Ralph Lauten | £75 each | Black, Navy, Grey |
 
-Live at: `yourusername.github.io/mbzsupply/`
+## 🧥 Coats
+| Product | Price | Colourways |
+|---|---|---|
+| CG Windham | £125 each | Black/Black Badge, Black/Red Badge, Grey/Black Badge, Grey/Red Badge |
+
+## 📁 Files
+- `index.html` — Your live website (edit this to update products)
+- `style.css` — Colours, layout, fonts
+- `README.md` — This info file
+
+## ✏️ How to Update
+1. Open `index.html`
+2. Edit text / prices / colours
+3. Scroll down → **Commit changes**
+4. Site updates automatically via GitHub Pages
+
+> Last updated: Oct 2026 — All names & prices confirmed
